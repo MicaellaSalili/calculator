@@ -1,0 +1,22 @@
+Button,Function Name,Definition
+0-9,inputDigit(digit),Appends the digit to the current display number.
+.,inputDecimal(),Appends a decimal point if one isn’t already present.
++,performOperation('+'),Prepares to add the next number.
+-,performOperation('-'),Prepares to subtract the next number.
+x,performOperation('*'),Prepares to multiply the next number.
+÷,performOperation('/'),Prepares to divide by the next number.
+=,calculateResult(),Evaluates the expression and shows the result.
+MC,memoryClear(),Clears the stored memory.
+MR,memoryRecall(),Recalls the stored number.
+M+,memoryAdd(),Adds the current number to memory.
+M-,memorySubtract(),Subtracts the current number from memory.
+MS,memoryStore(),Stores the current number in memory.
+M∨,memoryDropdown(),Shows memory history (if implementing extended memory).
+BIN,convertToBinary(),Converts the current number to binary.
+OCT,convertToOctal(),Converts the current number to octal.
+HEX,convertToHex(),Converts the current number to hexadecimal.
+%,calculatePercentage(),Converts current number to a percentage (divides by 100).
++/-,toggleSign(),Changes the sign of the current number (positive ↔ negative).
+CE,clearEntry(),Clears the current entry (but keeps operations in memory).
+C,clearAll(),"Clears all entries, resets display and memory."
+⌫,deleteLastDigit(),Deletes the last digit from the current input.
