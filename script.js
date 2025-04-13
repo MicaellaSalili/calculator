@@ -1,5 +1,3 @@
-"use strict";
-
 document.addEventListener("DOMContentLoaded", () => {
   const display = document.getElementById("display");
   const memoryStatus = document.getElementById("memory-status");
@@ -248,19 +246,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function loadSettings() {
     const fontSize = localStorage.getItem("fontSize") || "36";
+    const isLightMode = localStorage.getItem("lightMode") === "true";
     fontSizeInput.value = fontSize;
     applyFontSize(fontSize);
+    document.getElementById("lightMode").checked = isLightMode;
+    document.body.classList.toggle("light-mode", isLightMode);
+    document.querySelector(".calculator").classList.toggle("light-mode", isLightMode);
+    document.querySelectorAll("span").forEach(button => button.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll("button").forEach(button => button.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll(".top-func").forEach(button => button.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll(".modal-content").forEach(modal => modal.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll(".tab-button").forEach(tabButton => tabButton.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll(".tab-content").forEach(tabContent => tabContent.classList.toggle("light-mode", isLightMode));
+    document.querySelector("#settings button").classList.toggle("light-mode", isLightMode);
+    document.querySelector("body").classList.toggle("light-mode", isLightMode);
   }
 
   function applyFontSize(fontSize) {
     screen.style.fontSize = `${fontSize}px`;
   }
 
+  fontSizeInput.addEventListener("input", () => {
+    const fontSize = fontSizeInput.value;
+    applyFontSize(fontSize);
+  });
+
+  document.getElementById("lightMode").addEventListener("change", (e) => {
+    const isLightMode = e.target.checked;
+    document.body.classList.toggle("light-mode", isLightMode);
+    document.querySelector(".calculator").classList.toggle("light-mode", isLightMode);
+    document.querySelectorAll("span").forEach(button => button.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll("button").forEach(button => button.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll(".top-func").forEach(button => button.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll(".modal-content").forEach(modal => modal.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll(".tab-button").forEach(tabButton => tabButton.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll(".tab-content").forEach(tabContent => tabContent.classList.toggle("light-mode", isLightMode));
+    document.querySelector("#settings button").classList.toggle("light-mode", isLightMode);
+    document.querySelector(".body").classList.toggle("light-mode", isLightMode);
+  });
+
   function saveSettings() {
     const fontSize = fontSizeInput.value;
+    const isLightMode = document.getElementById("lightMode").checked;
     localStorage.setItem("fontSize", fontSize);
-    applyFontSize(fontSize);
-    alert("Settings saved successfully!");
+    localStorage.setItem("lightMode", isLightMode);
+    alert("Settings saved!");
   }
 
   saveSettingsButton.addEventListener("click", saveSettings);
@@ -285,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .querySelector(`.tab-button[data-tab="${tabId}"]`)
       .classList.add("active");
   }
-  
+
   loadSettings();
   updateDisplay(current);
   updateMemoryStatus();
