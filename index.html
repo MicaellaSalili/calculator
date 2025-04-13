@@ -1,58 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title> Calculator</title>
-  <link rel="icon" href="images/logo.png" type="image/png">
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="calculator">
-    <div class="top-bar">
-      <span>🧮 Calculator</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+    <link rel="icon" href="images/logo.png" type="image/png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="calculator">
+      <div class="top-bar">
+        <span class="menu-toggle">☰</span>
+        <span>🧮 Calculator</span>
+      </div>
+      <div id="display" class="screen" contenteditable="false">0</div>
+      <!-- Memory Dropdown -->
+      <div id="memory-status" class="memory-dropdown">
+        <div id="memory-display"></div>
+      </div>
+      <div class="memory-buttons">
+        <button class="top-func">MC</button>
+        <button class="top-func">MR</button>
+        <button class="top-func">M+</button>
+        <button class="top-func">M-</button>
+        <button class="top-func">MS</button>
+        <button class="top-func">M∨</button>
+      </div>
+
+      <div class="buttons">
+        <button class="gray">%</button>
+        <button class="gray">CE</button>
+        <button class="gray">C</button>
+        <button class="clear">⌫</button>
+        <button class="gray mode">BIN</button>
+        <button class="gray mode">OCT</button>
+        <button class="gray mode">HEX</button>
+        <button class="operator">÷</button>
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button class="operator">x</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button class="operator">-</button>
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button class="operator">+</button>
+        <button>+/-</button>
+        <button>0</button>
+        <button>.</button>
+        <button class="equal">=</button>
+      </div>
     </div>
-    <div id="display" class="screen">0</div>
-    <div class="buttons">
-      <button class="top-func">MC</button>
-      <button class="top-func">MR</button>
-      <button class="top-func">M+</button>
-      <button class="top-func">M-</button>
-      <button class="top-func">MS</button>
-      <button class="top-func">M∨</button>
 
-      <button class="gray">%</button>
-      <button class="gray">CE</button>
-      <button class="gray">C</button>
-      <button class="clear">⌫</button>
-
-      <button class="gray mode">BIN</button>
-      <button class="gray mode">OCT</button>
-      <button class="gray mode">HEX</button>
-      <button class="operator">÷</button>
-
-      <button>7</button>
-      <button>8</button>
-      <button>9</button>
-      <button class="operator">x</button>
-
-      <button>4</button>
-      <button>5</button>
-      <button>6</button>
-      <button class="operator">-</button>
-
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button class="operator">+</button>
-
-      <button>+/-</button>
-      <button>0</button>
-      <button>.</button>
-      <button class="equal">=</button>
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">×</span>
+        <h2>Calculator Guide & Settings</h2>
+        <div class="tabs">
+          <button class="tab-button" data-tab="help">Help</button>
+          <button class="tab-button" data-tab="settings">Settings</button>
+        </div>
+        <!-- Scrollable Content -->
+        <div class="scrollable-content">
+          <div id="help" class="tab-content" style="display: block">
+            <h3>How to Use</h3>
+            <ul>
+              <li><strong>Numeric Buttons (0-9):</strong> Input decimal numbers in DEC mode.</li>
+              <li><strong>Mode Buttons (BIN, OCT, HEX):</strong> Select a number base after entering a decimal number, then press = to convert.</li>
+              <li><strong>=:</strong> Converts to the selected base or completes calculations.</li>
+              <li><strong>Operators (+, -, x, ÷):</strong> Perform arithmetic in DEC mode.</li>
+              <li><strong>%:</strong> Calculate percentage (DEC mode only).</li>
+              <li><strong>+/-:</strong> Toggle sign (DEC mode only).</li>
+              <li><strong>.:</strong> Add decimal point (DEC mode only).</li>
+              <li><strong>C:</strong> Clear all values and memory.</li>
+              <li><strong>CE:</strong> Clear current entry.</li>
+              <li><strong>⌫:</strong> Delete last digit.</li>
+              <li>
+                <strong>Memory Functions (MC, MR, M+, M-, MS, M∨):</strong> Manage memory like Windows Calculator: Clear, Recall, Add, Subtract, Store, or View.
+              </li>
+            </ul>
+          </div>
+          <div id="settings" class="tab-content" style="display: none">
+            <h3>Settings</h3>
+            <label><input type="checkbox" id="lightMode" /> Light Mode</label><br />
+            <label>
+              <input type="number" id="fontSize" min="12" max="48" value="36" />
+              Font Size (px)
+            </label><br />
+            <button onclick="saveSettings()">Save Settings</button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

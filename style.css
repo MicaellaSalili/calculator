@@ -1,62 +1,354 @@
+/* General Styles */
 * {
-    box-sizing: border-box;
-  }
-  body {
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: sans-serif;
-  }
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Calculator Styles */
+.calculator {
+  width: 340px;
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  color: #fff;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.menu-toggle {
+  cursor: pointer;
+  font-size: 24px;
+  color: #fff;
+  transition: transform 0.2s;
+}
+
+.menu-toggle:hover {
+  transform: scale(1.1);
+}
+
+.screen {
+  background: #2c2c2c;
+  color: #fff;
+  font-size: 36px;
+  text-align: right;
+  padding: 15px;
+  border: 2px solid #00b050;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  height: 80px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  caret-color: transparent;
+  user-select: none;
+}
+
+/* Memory Items */
+.memory-item {
+  margin-bottom: 8px;
+  text-align: right;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.memory-buttons {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+/* Memory Status (Embedded) */
+#memory-status {
+  display: block;
+  position: static;
+  margin-top: 10px;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  max-height: 150px;
+  overflow-y: auto;
+  width: 100%;
+  padding: 0;
+}
+
+#memory-status .memory-item {
+  text-align: right;
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+button {
+  padding: 14px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background: #e0e0e0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+  background: #d0d0d0;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.top-func {
+  background: #444;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.top-func:hover {
+  background: #555;
+}
+
+/* Clear Button */
+.clear {
+  background: #d32f2f;
+  color: #fff;
+}
+
+.clear:hover {
+  background: #b71c1c;
+}
+
+/* Equal Button */
+.equal {
+  background: #00b050;
+  color: #fff;
+}
+
+.equal:hover {
+  background: #009e40;
+}
+
+/* Operator Buttons */
+.operator {
+  background: #ccc;
+}
+
+.operator:hover {
+  background: #bbb;
+}
+
+/* Gray Buttons */
+.gray {
+  background: #666;
+  color: #fff;
+  font-size: 14px;
+}
+
+.gray:hover {
+  background: #777;
+}
+
+.gray.mode.disabled {
+  background: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  background-color: #ffffff;
+  margin: 5% auto;
+  padding: 24px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-height: 80vh;
+  overflow: hidden;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.close {
+  color: #333;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.close:hover,
+.close:focus {
+  color: #ff4d4d;
+}
+
+.modal-content h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #333;
+  text-align: center;
+}
+
+/* Tabs Section */
+.tabs {
+  display: flex;
+  justify-content: center;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  z-index: 10;
+  padding-bottom: 10px;
+}
+
+/* Scrollable Content */
+.scrollable-content {
+  overflow-y: auto;
+  max-height: calc(80vh - 150px);
+  padding-right: 10px;
+}
+
+/* Tab Buttons */
+.tab-button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #555;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+
+.tab-button:hover {
+  color: #00b050;
+}
+
+.tab-button.active {
+  color: #00b050;
+  border-bottom: 2px solid #00b050;
+}
+
+/* Tab Content */
+.tab-content {
+  display: none;
+  padding: 10px 0;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #444;
+}
+
+.tab-content ul {
+  padding-left: 20px;
+}
+
+.tab-content li {
+  margin-bottom: 10px;
+}
+
+.tab-content h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Settings Section */
+#settings label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #555;
+}
+
+#settings input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+#settings input[type="number"] {
+  width: 60px;
+  padding: 4px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#settings button {
+  background-color: #00b050;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+#settings button:hover {
+  background-color: #00873e;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 400px) {
   .calculator {
-    width: 320px;
-    background: #000;
-    border-radius: 10px;
-    padding: 10px 10px 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    width: 100%;
+    max-width: 300px;
   }
-  .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
-    color: white;
-    font-size: 14px;
-    margin-bottom: 15px;
-  }
+
   .screen {
-    background: #222;
-    color: white;
-    font-size: 36px;
-    text-align: right;
-    padding: 15px;
-    border: 3px solid #009e54;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    font-size: 28px;
+    height: 70px;
   }
-  .buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
+
   button {
-    padding: 15px;
-    font-size: 18px;
-    border: none;
-    border-radius: 8px;
-    background: #e0e0e0;
-    cursor: pointer;
-    font-weight: bold;
+    padding: 12px;
+    font-size: 16px;
   }
-  .top-func { background: #333; color: white; font-size: 14px; padding: 10px; }
-  .clear { background: #d32f2f; color: white; }
-  .equal { background: #00b050; color: white; }
-  .operator { background: #ccc; }
-  .gray { background: #555; color: white; font-size: 12px; }
-  
+
+  .top-func {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
