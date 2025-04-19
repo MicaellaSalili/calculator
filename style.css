@@ -48,11 +48,11 @@ body {
   color: #fff;
   font-size: 36px;
   text-align: right;
-  padding: 15px;
+  padding: 10px;
   border: 2px solid #00b050;
   border-radius: 8px;
-  margin-bottom: 10px;
-  height: 80px;
+  margin-bottom: 15px;
+  height: 100px;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
@@ -60,14 +60,15 @@ body {
   user-select: none;
 }
 
-/* Memory Items */
 .memory-item {
-  margin-bottom: 8px;
   text-align: right;
-  padding: 5px 10px;
-  border-radius: 5px;
   font-size: 16px;
   color: #ffffff;
+  padding: 5px 10px;
+  border-bottom: 1px solid #444;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .memory-buttons {
@@ -80,22 +81,12 @@ body {
 /* Memory Status (Embedded) */
 #memory-status {
   display: block;
-  position: static;
-  margin-top: 10px;
+  position: relative;
   background-color: transparent;
-  border: none;
-  box-shadow: none;
-  max-height: 150px;
+  max-height: 100%; /* Fit within the screen */
   overflow-y: auto;
-  width: 100%;
-  padding: 0;
-}
-
-#memory-status .memory-item {
-  text-align: right;
-  font-size: 14px;
+  padding: 10px;
   color: #ffffff;
-  margin-bottom: 5px;
 }
 
 .buttons {
@@ -181,7 +172,6 @@ button:active {
   opacity: 0.6;
 }
 
-/* Modal Styles */
 .modal {
   display: none;
   position: fixed;
@@ -247,7 +237,6 @@ button:active {
   max-height: calc(100vh - 340px);
   width: 340px;
   height: 600px;
-  
 }
 
 /* Tab Buttons */
@@ -255,6 +244,7 @@ button:active {
   background-color: transparent;
   border: none;
   outline: none;
+  margin: 0 2px;
   cursor: pointer;
   padding: 12px 20px;
   font-size: 16px;
@@ -271,8 +261,6 @@ button:active {
   color: #00b050;
   border-bottom: 2px solid #00b050;
 }
-
-/* Tab Content */
 .tab-content {
   display: none;
   padding: 10px 0;
@@ -296,7 +284,6 @@ button:active {
   color: #333;
 }
 
-/* Settings Section */
 #settings label {
   display: block;
   margin-bottom: 12px;

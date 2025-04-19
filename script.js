@@ -13,44 +13,102 @@ document.addEventListener("DOMContentLoaded", () => {
   // Calculator State
   let current = "0";
   let memory = [];
-  let operator = null; 
-  let previousValue = null; 
+  let operator = null;
+  let previousValue = null;
+  let equation = ""; // Stores the full equation as a string
+
+  // Memory variables
+  let memoryValue = 0;
 
   // Utility Functions
   function parseInput(value) {
     value = value.toString().trim();
     if (value === "" || value === "Error") return 0;
-    return parseFloat(value) || 0; 
+    return parseFloat(value) || 0;
   }
 
   function updateDisplay(value) {
-    display.textContent = value;
-    display.scrollLeft = display.scrollWidth; 
+    const display = document.getElementById("display");
+    display.innerHTML = `
+      <div style="font-size: 0.5em; color: gray; text-align: right;">
+        ${equation || ""}
+      </div>
+      <div style="font-size: 1.2em; text-align: right;">
+        ${value}
+      </div>
+    `;
+    display.scrollLeft = display.scrollWidth;
   }
 
+  // Event listeners for memory buttons
+  document.querySelector('.top-func:nth-child(1)').addEventListener('click', () => {
+    // MC: Clear memory
+    memoryValue = 0;
+    updateDisplay('0'); // Clear the screen as well
+  });
+
+  document.querySelector('.top-func:nth-child(2)').addEventListener('click', () => {
+    // MR: Recall memory
+    updateDisplay(memoryValue);
+  });
+
+  document.querySelector('.top-func:nth-child(3)').addEventListener('click', () => {
+    // M+: Add to memory
+    const currentValue = parseFloat(document.getElementById('display').textContent) || 0;
+    memoryValue += currentValue;
+    updateDisplay(memoryValue); // Optionally show updated memory
+  });
+
+  document.querySelector('.top-func:nth-child(4)').addEventListener('click', () => {
+    // M-: Subtract from memory
+    const currentValue = parseFloat(document.getElementById('display').textContent) || 0;
+    memoryValue -= currentValue;
+    updateDisplay(memoryValue); // Optionally show updated memory
+  });
+
+  document.querySelector('.top-func:nth-child(5)').addEventListener('click', () => {
+    // MS: Store current value in memory
+    const currentValue = parseFloat(document.getElementById('display').textContent) || 0;
+    memoryValue = currentValue;
+    updateDisplay(memoryValue); // Show the stored value
+  });
+
+  document.querySelector('.top-func:nth-child(6)').addEventListener('click', () => {
+    // M∨: View memory
+    const display = document.getElementById('display');
+    display.innerHTML = `
+      <div id="memory-status">
+        <div class="memory-item">${memoryValue || 'No memory stored'}</div>
+      </div>
+    `;
+  });
+
   // Core Calculator Functions
+  function calculate(a, b, operator) {
+    switch (operator) {
+      case "+":
+        return a + b;
+      case "-":
+        return a - b;
+      case "*":
+        return a * b;
+      case "/":
+        return b === 0 ? "Error" : a / b;
+      default:
+        return 0;
+    }
+  }
+
   function performOperation() {
     if (previousValue !== null && operator !== null) {
       const currentValue = parseInput(current);
-      switch (operator) {
-        case "+":
-          current = (previousValue + currentValue).toString();
-          break;
-        case "-":
-          current = (previousValue - currentValue).toString();
-          break;
-        case "*":
-          current = (previousValue * currentValue).toString();
-          break;
-        case "/":
-          current =
-            currentValue === 0
-              ? "Error"
-              : (previousValue / currentValue).toString();
-          break;
-      }
+      const result = calculate(previousValue, currentValue, operator);
+      equation = `${previousValue} ${operator} ${currentValue} = ${result}`; // Update the equation with the result
+
+      current = result.toString();
       previousValue = null;
       operator = null;
+
       updateDisplay(current);
     }
   }
@@ -67,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function clearAll() {
     current = "0";
+    equation = ""; // Clear the equation
     previousValue = null;
     operator = null;
     updateDisplay(current);
@@ -79,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function deleteLastDigit() {
     current = current.slice(0, -1) || "0";
+    equation = equation.slice(0, -1); // Remove the last character from the equation
     updateDisplay(current);
   }
 
@@ -112,10 +172,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleMemoryDropdown() {
-    const dropdown = document.getElementById("memory-status");
-    dropdown.style.display =
-      dropdown.style.display === "block" ? "none" : "block";
-    if (dropdown.style.display === "block") updateMemoryStatus();
+    if (display.getAttribute("data-mode") === "memory") {
+      // Restore the original display
+      updateDisplay(current);
+      display.setAttribute("data-mode", "default");
+    } else {
+      // Replace the screen content with memory status
+      const memoryContent = memory.length
+        ? memory
+            .map((value) => `<div class="memory-item">${value}</div>`)
+            .join("")
+        : "<div class='memory-item'>No memory stored</div>";
+
+      display.innerHTML = `
+        <div id="memory-status">
+          ${memoryContent}
+        </div>
+      `;
+      display.setAttribute("data-mode", "memory");
+    }
   }
 
   function hideMemoryDropdown() {
@@ -124,33 +199,37 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function memoryClear() {
-    memory = [];
-    updateMemoryStatus();
+    memory = []; // Clear the memory array
+    updateMemoryStatus(); // Update the memory display
   }
 
   function memoryRecall() {
     if (memory.length > 0) {
-      current = memory[memory.length - 1].toString();
-      updateDisplay(current);
+      current = memory[memory.length - 1].toString(); // Recall the last stored value
+      updateDisplay(current); // Update the calculator display
+    } else {
+      console.warn("No memory to recall."); // Optional: Log a warning if memory is empty
     }
   }
 
   function memoryAdd() {
+    const currentValue = parseInput(current); // Parse the current value
     if (memory.length > 0) {
-      memory[memory.length - 1] += parseInput(current);
+      memory[memory.length - 1] += currentValue; // Add to the last stored value
     } else {
-      memory.push(parseInput(current));
+      memory.push(currentValue); // If no memory exists, store the current value
     }
-    updateMemoryStatus();
+    updateMemoryStatus(); // Update the memory display
   }
 
   function memorySubtract() {
+    const currentValue = parseInput(current); // Parse the current value
     if (memory.length > 0) {
-      memory[memory.length - 1] -= parseInput(current);
+      memory[memory.length - 1] -= currentValue; // Subtract from the last stored value
     } else {
-      memory.push(-parseInput(current));
+      memory.push(-currentValue); // If no memory exists, store the negative of the current value
     }
-    updateMemoryStatus();
+    updateMemoryStatus(); // Update the memory display
   }
 
   function memoryStore() {
@@ -160,7 +239,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Input Functions
   function inputDigit(digit) {
-    current = current === "0" || current === "Error" ? digit : current + digit;
+    if (current === "0" || current === "Error") {
+      current = digit;
+    } else {
+      current += digit;
+    }
+    equation += digit; // Append digit to the equation
     updateDisplay(current);
   }
 
@@ -195,17 +279,36 @@ document.addEventListener("DOMContentLoaded", () => {
         convertToOctal();
       } else if (value === "HEX") {
         convertToHex();
+        if (!current.includes(".")) {
+          current += ".";
+          equation += ".";
+          updateDisplay(current);
+        }
       } else if (["+", "-", "*", "/"].includes(value)) {
-        if (previousValue === null) {
+        if (current !== "Error") {
+          equation += ` ${value} `;
           previousValue = parseInput(current);
           operator = value;
           current = "0";
         } else {
           performOperation();
           operator = value;
+          updateDisplay(value);
         }
       } else if (value === "=") {
-        performOperation();
+        
+        try {
+          const result = Function(`return ${equation}`)(); // Safely evaluate the full equation
+          equation += ` = ${result}`; // Append the result to the equation
+          current = result.toString();
+          updateDisplay(current); // Display the result while keeping the equation
+        } catch {
+          current = "Error";
+          equation = "";
+          updateDisplay(current);
+        }
+      } else if (value === "C") {
+        clearAll();
       }
     });
   });
@@ -215,7 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const value = btn.textContent.trim();
       switch (value) {
         case "MC":
-          memoryClear();
+          memoryClear(); // Ensure this is being called
           break;
         case "MR":
           memoryRecall();
@@ -232,14 +335,17 @@ document.addEventListener("DOMContentLoaded", () => {
         case "M∨":
           toggleMemoryDropdown();
           break;
+        default:
+          console.error("Unknown memory button action:", value);
       }
-      event.stopPropagation();
+      event.stopPropagation(); // Prevent interference with other button logic
     });
   });
 
   // Modal and Settings
   menuToggle.addEventListener("click", () => (modal.style.display = "block"));
   closeModal.addEventListener("click", () => (modal.style.display = "none"));
+
   window.addEventListener("click", (event) => {
     if (event.target === modal) modal.style.display = "none";
   });
@@ -251,15 +357,31 @@ document.addEventListener("DOMContentLoaded", () => {
     applyFontSize(fontSize);
     document.getElementById("lightMode").checked = isLightMode;
     document.body.classList.toggle("light-mode", isLightMode);
-    document.querySelector(".calculator").classList.toggle("light-mode", isLightMode);
-    document.querySelectorAll("span").forEach(button => button.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll("button").forEach(button => button.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll(".top-func").forEach(button => button.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll(".modal-content").forEach(modal => modal.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll(".tab-button").forEach(tabButton => tabButton.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll(".tab-content").forEach(tabContent => tabContent.classList.toggle("light-mode", isLightMode));
-    document.querySelector("#settings button").classList.toggle("light-mode", isLightMode);
-    document.querySelector("body").classList.toggle("light-mode", isLightMode);
+    document
+      .querySelector(".calculator")
+      .classList.toggle("light-mode", isLightMode);
+    document
+      .querySelectorAll("button")
+      .forEach((button) => button.classList.toggle("light-mode", isLightMode));
+    document
+      .querySelectorAll(".top-func")
+      .forEach((button) => button.classList.toggle("light-mode", isLightMode));
+    document
+      .querySelectorAll("span")
+      .forEach((button) => button.classList.toggle("light-mode", isLightMode));
+    document
+      .querySelectorAll(".modal-content")
+      .forEach((modal) => modal.classList.toggle("light-mode", isLightMode));
+    document
+      .querySelectorAll(".tab-button")
+      .forEach((tabButton) =>
+        tabButton.classList.toggle("light-mode", isLightMode)
+      );
+    document
+      .querySelectorAll(".tab-content")
+      .forEach((tabContent) =>
+        tabContent.classList.toggle("light-mode", isLightMode)
+      );
   }
 
   function applyFontSize(fontSize) {
@@ -274,15 +396,24 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("lightMode").addEventListener("change", (e) => {
     const isLightMode = e.target.checked;
     document.body.classList.toggle("light-mode", isLightMode);
-    document.querySelector(".calculator").classList.toggle("light-mode", isLightMode);
-    document.querySelectorAll("span").forEach(button => button.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll("button").forEach(button => button.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll(".top-func").forEach(button => button.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll(".modal-content").forEach(modal => modal.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll(".tab-button").forEach(tabButton => tabButton.classList.toggle("light-mode", isLightMode));
-    document.querySelectorAll(".tab-content").forEach(tabContent => tabContent.classList.toggle("light-mode", isLightMode));
-    document.querySelector("#settings button").classList.toggle("light-mode", isLightMode);
-    document.querySelector(".body").classList.toggle("light-mode", isLightMode);
+    document
+      .querySelector(".calculator")
+      .classList.toggle("light-mode", isLightMode);
+    document
+      .querySelectorAll("button")
+      .forEach((button) => button.classList.toggle("light-mode", isLightMode));
+    document
+      .querySelectorAll(".top-func")
+      .forEach((button) => button.classList.toggle("light-mode", isLightMode));
+    document
+      .querySelectorAll("span")
+      .forEach((button) => button.classList.toggle("light-mode", isLightMode));
+    document
+      .querySelectorAll(".modal-content")
+      .forEach((modal) => modal.classList.toggle("light-mode", isLightMode));
+    document
+.querySelectorAll(".tab-button").forEach((tabButton) =>tabButton.classList.toggle("light-mode", isLightMode));
+    document.querySelectorAll(".tab-content").forEach((tabContent) => tabContent.classList.toggle("light-mode", isLightMode));
   });
 
   function saveSettings() {
@@ -290,7 +421,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const isLightMode = document.getElementById("lightMode").checked;
     localStorage.setItem("fontSize", fontSize);
     localStorage.setItem("lightMode", isLightMode);
-    alert("Settings saved!");
   }
 
   saveSettingsButton.addEventListener("click", saveSettings);
