@@ -10,17 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveSettingsButton = document.querySelector("#settings button");
   const screen = document.querySelector(".screen");
 
-  // Calculator State
   let current = "0";
   let memory = [];
   let operator = null;
   let previousValue = null;
-  let equation = ""; // Stores the full equation as a string
-
-  // Memory variables
+  let equation = ""; 
   let memoryValue = 0;
 
-  // Utility Functions
   function parseInput(value) {
     value = value.toString().trim();
     if (value === "" || value === "Error") return 0;
@@ -40,11 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
     display.scrollLeft = display.scrollWidth;
   }
 
-  // Event listeners for memory buttons
   document.querySelector('.top-func:nth-child(1)').addEventListener('click', () => {
-    // MC: Clear memory
     memoryValue = 0;
-    updateDisplay('0'); // Clear the screen as well
+    updateDisplay('0'); 
   });
 
   document.querySelector('.top-func:nth-child(2)').addEventListener('click', () => {
@@ -56,14 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // M+: Add to memory
     const currentValue = parseFloat(document.getElementById('display').textContent) || 0;
     memoryValue += currentValue;
-    updateDisplay(memoryValue); // Optionally show updated memory
+    updateDisplay(memoryValue); 
   });
 
   document.querySelector('.top-func:nth-child(4)').addEventListener('click', () => {
     // M-: Subtract from memory
     const currentValue = parseFloat(document.getElementById('display').textContent) || 0;
     memoryValue -= currentValue;
-    updateDisplay(memoryValue); // Optionally show updated memory
+    updateDisplay(memoryValue);
   });
 
   document.querySelector('.top-func:nth-child(5)').addEventListener('click', () => {
@@ -114,7 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleSign() {
-    current = (-parseInput(current)).toString();
+    const negatedValue = (-parseInput(current)).toString();
+    equation = equation.replace(current, negatedValue); // Update the equation with the negated value
+    current = negatedValue;
     updateDisplay(current);
   }
 
@@ -161,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Memory Functions
   function updateMemoryStatus() {
     const memoryDisplay = document.getElementById("memory-display");
-    memoryDisplay.textContent = ""; // Clear existing content
+    memoryDisplay.textContent = ""; 
 
     memory.forEach((value) => {
       const memoryItem = document.createElement("div");
@@ -199,37 +195,37 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function memoryClear() {
-    memory = []; // Clear the memory array
-    updateMemoryStatus(); // Update the memory display
+    memory = []; 
+    updateMemoryStatus(); 
   }
 
   function memoryRecall() {
     if (memory.length > 0) {
-      current = memory[memory.length - 1].toString(); // Recall the last stored value
-      updateDisplay(current); // Update the calculator display
+      current = memory[memory.length - 1].toString(); 
+      updateDisplay(current); 
     } else {
-      console.warn("No memory to recall."); // Optional: Log a warning if memory is empty
+      console.warn("No memory to recall."); 
     }
   }
 
   function memoryAdd() {
-    const currentValue = parseInput(current); // Parse the current value
+    const currentValue = parseInput(current); 
     if (memory.length > 0) {
-      memory[memory.length - 1] += currentValue; // Add to the last stored value
+      memory[memory.length - 1] += currentValue; 
     } else {
-      memory.push(currentValue); // If no memory exists, store the current value
+      memory.push(currentValue);
     }
-    updateMemoryStatus(); // Update the memory display
+    updateMemoryStatus(); 
   }
 
   function memorySubtract() {
-    const currentValue = parseInput(current); // Parse the current value
+    const currentValue = parseInput(current); 
     if (memory.length > 0) {
-      memory[memory.length - 1] -= currentValue; // Subtract from the last stored value
+      memory[memory.length - 1] -= currentValue; 
     } else {
-      memory.push(-currentValue); // If no memory exists, store the negative of the current value
+      memory.push(-currentValue); 
     }
-    updateMemoryStatus(); // Update the memory display
+    updateMemoryStatus(); 
   }
 
   function memoryStore() {
@@ -237,14 +233,13 @@ document.addEventListener("DOMContentLoaded", () => {
     updateMemoryStatus();
   }
 
-  // Input Functions
   function inputDigit(digit) {
     if (current === "0" || current === "Error") {
       current = digit;
     } else {
       current += digit;
     }
-    equation += digit; // Append digit to the equation
+    equation += digit; 
     updateDisplay(current);
   }
 
@@ -255,7 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Event Listeners for Buttons
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
       const value = btn.textContent.trim();
@@ -298,10 +292,10 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (value === "=") {
         
         try {
-          const result = Function(`return ${equation}`)(); // Safely evaluate the full equation
-          equation += ` = ${result}`; // Append the result to the equation
+          const result = Function(`return ${equation}`)(); 
+          equation += ` = ${result}`; 
           current = result.toString();
-          updateDisplay(current); // Display the result while keeping the equation
+          updateDisplay(current); 
         } catch {
           current = "Error";
           equation = "";
@@ -318,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const value = btn.textContent.trim();
       switch (value) {
         case "MC":
-          memoryClear(); // Ensure this is being called
+          memoryClear(); 
           break;
         case "MR":
           memoryRecall();
@@ -338,11 +332,10 @@ document.addEventListener("DOMContentLoaded", () => {
         default:
           console.error("Unknown memory button action:", value);
       }
-      event.stopPropagation(); // Prevent interference with other button logic
+      event.stopPropagation(); 
     });
   });
 
-  // Modal and Settings
   menuToggle.addEventListener("click", () => (modal.style.display = "block"));
   closeModal.addEventListener("click", () => (modal.style.display = "none"));
 
@@ -422,10 +415,8 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("fontSize", fontSize);
     localStorage.setItem("lightMode", isLightMode);
   }
-
   saveSettingsButton.addEventListener("click", saveSettings);
 
-  // Tab Navigation
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.addEventListener("click", () => {
       const tabId = button.getAttribute("data-tab");
