@@ -209,23 +209,41 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function memoryAdd() {
-    const currentValue = parseInput(current); 
+    if (operator !== null && previousValue !== null) {
+      // If an operator is present, throw an error
+      current = "Error";
+      updateDisplay(current);
+      return;
+    }
+
+    const currentValue = parseInput(current);
     if (memory.length > 0) {
-      memory[memory.length - 1] += currentValue; 
+      memory[memory.length - 1] += currentValue;
     } else {
       memory.push(currentValue);
     }
-    updateMemoryStatus(); 
+    current = "0"; // Clear the current input
+    updateDisplay(current); // Update the display to show the cleared state
+    updateMemoryStatus();
   }
 
   function memorySubtract() {
-    const currentValue = parseInput(current); 
-    if (memory.length > 0) {
-      memory[memory.length - 1] -= currentValue; 
-    } else {
-      memory.push(-currentValue); 
+    if (operator !== null && previousValue !== null) {
+      // If an operator is present, throw an error
+      current = "Error";
+      updateDisplay(current);
+      return;
     }
-    updateMemoryStatus(); 
+
+    const currentValue = parseInput(current);
+    if (memory.length > 0) {
+      memory[memory.length - 1] -= currentValue;
+    } else {
+      memory.push(-currentValue);
+    }
+    current = "0"; // Clear the current input
+    updateDisplay(current); // Update the display to show the cleared state
+    updateMemoryStatus();
   }
 
   function memoryStore() {
@@ -246,6 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function inputDecimal() {
     if (!current.includes(".")) {
       current += ".";
+      equation += ".";
       updateDisplay(current);
     }
   }
@@ -273,11 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
         convertToOctal();
       } else if (value === "HEX") {
         convertToHex();
-        if (!current.includes(".")) {
-          current += ".";
-          equation += ".";
-          updateDisplay(current);
-        }
       } else if (["+", "-", "*", "/"].includes(value)) {
         if (current !== "Error") {
           equation += ` ${value} `;
@@ -290,17 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
           updateDisplay(value);
         }
       } else if (value === "=") {
-        
-        try {
-          const result = Function(`return ${equation}`)(); 
-          equation += ` = ${result}`; 
-          current = result.toString();
-          updateDisplay(current); 
-        } catch {
-          current = "Error";
-          equation = "";
-          updateDisplay(current);
-        }
+        performOperation(); // Use the performOperation function to calculate the result
       } else if (value === "C") {
         clearAll();
       }
